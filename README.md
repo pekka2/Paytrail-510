@@ -1,1 +1,2 @@
-Paytrail 510
+Maksutapa laajennus Opencart verkkokaupoihin.
+
