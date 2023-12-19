@@ -1,1 +1,97 @@
-mmmmmmmmmmmmm
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+<version><![CDATA[1.0]]></version>
+<author><![CDATA[peku]]></author>
+<name>Paytrail</name>
+<link></link>
+<code>pm-extesnsion-paytrail-2021</code>
+<file name="catalog/controller/checkout/checkout.php">
+<operation>
+<search position="before"><![CDATA[public function country() {]]></search>
+<add><![CDATA[
+  public function paytrail_complete() {
+    
+      $this->language->load('payment/paytrail_510');
+      $this->load->model('checkout/order');
+
+      $amount = trim($this->request->get['checkout-amount']);
+      $return_authcode = trim($this->request->get['signature']);
+      $reference = trim($this->request->get['checkout-reference']);
+      $transaction_id = trim($this->request->get['checkout-transaction-id']);
+      $status = trim($this->request->get['checkout-status']);
+      $provider = trim($this->request->get['checkout-provider']);
+      $str_len = strlen($return_authcode);
+
+      $order_id = $reference;
+  
+     if($order_id && $str_len > 20 && $amount > 0 && $status == 'ok'){
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+    
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->language->get('text_title') . " (" . $provider . ")', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+
+            $this->model_checkout_order->confirm($order_id, $this->config->get('paytrail_510_order_status_id'), "", true);
+           
+          $string =  'STATUS: ' . $status . ', ' .$this->language->get('text_paid_success') . $provider . '; CHECKOUT TRANSACTION ID: ' . $transaction_id . '; MAKSAJAN PANKKI: ' . $provider . ', ORDER ID: ' . $order_id . '; SUMMA: ' . $amount/100;
+          $log = new Log('paytrail-510.log');
+          $log->write($string);
+
+        $this->response->redirect($this->url->link('checkout/success', true));   
+     } elseif($status !='ok'){      
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->language->get('text_title') . " (" . $provider . ")', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+            $this->model_checkout_order->confirm($order_id, $this->config->get('ppaytrail_510_order_cancel_status_id'), "", true);
+       
+          $string =  'STATUS: ' . $status . ', ' .$this->language->get('text_paid_cancel') . '; CHECKOUT TRANSACTION ID: ' . $transaction_id . '; MAKSAJAN PANKKI: ' . $provider . '; ORDER ID: ' . $order_id . '; SUMMA: ' . $amount/100;
+
+          $log = new Log('paytrail-510.log');
+          $log->write($string);
+          $log2 = new Log('paytrail-510-failed.log');
+          $log2->write($string);
+          $this->redirect($this->url->link('checkout/cart', true));   
+     }
+  }
+
+  public function paytrail_cancel() {
+    
+      $this->language->load('payment/paytrail_510');
+      $this->load->model('checkout/order');
+
+      $amount = trim($this->request->get['checkout-amount']);
+      $return_authcode = $this->request->get['signature'];
+      $reference = $this->request->get['checkout-reference'];
+      $transaction_id = $this->request->get['checkout-transaction-id'];
+      $status = trim($this->request->get['checkout-status']);
+      $provider = trim($this->request->get['checkout-provider']);
+      $str_len = strlen($return_authcode);
+
+      $order_id = $reference;
+  
+     if($order_id && $str_len > 20 && $amount > 0 && $status == 'ok'){
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+    
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->language->get('text_title') . " (" . $provider . ")', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+
+            $this->model_checkout_order->confirm($order_id, $this->config->get('paytrail_510_order_status_id'), "", true);
+           
+          $string =  'STATUS: ' . $status . ', ' .$this->language->get('text_paid_success') . $provider . '; CHECKOUT TRANSACTION ID: ' . $transaction_id . '; MAKSAJAN PANKKI: ' . $provider . ', ORDER ID: ' . $order_id . '; SUMMA: ' . $amount/100;
+          $log = new Log('paytrail-510.log');
+          $log->write($string);
+
+        $this->response->redirect($this->url->link('checkout/success', true));   
+     } elseif($status !='ok'){  
+    
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->language->get('text_title') . " (" . $provider . ")', date_modified = NOW() WHERE order_id = '" . $order_id . "'");
+            $this->model_checkout_order->confirm($order_id, $this->config->get('paytrail_510_order_cancel_status_id'), "", true);
+           
+          $string =  'STATUS: ' . $status . ', ' .$this->language->get('text_paid_cancel') . '; CHECKOUT TRANSACTION ID: ' . $transaction_id . '; MAKSAJAN PANKKI: ' . $provider . '; ORDER ID: ' . $order_id . '; SUMMA: ' . $amount/100;
+
+          $log = new Log('paytrail-510.log');
+          $log->write($string);
+          $log2 = new Log('paytrail-510-failed.log');
+          $log2->write($string);
+
+     }
+        $this->redirect($this->url->link('checkout/failure', true));  
+   }]]></add>
+</operation>
+</file>
+</modification>

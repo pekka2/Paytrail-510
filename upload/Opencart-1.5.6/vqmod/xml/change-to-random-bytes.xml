@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+<version><![CDATA[1.0]]></version>
+<author><![CDATA[peku]]></author>
+<name>Change function mcrypt_create_iv</name>
+<link></link>
+<code>X4d9xxxJgfrv4Bs</code>
+<file name="system/library/encryption.php">
+<operation>
+<search position="replace"><![CDATA[$this->iv = mcrypt_create_iv(32, MCRYPT_RAND);]]></search>
+<add><![CDATA[if(function_exists('random_bytes')){
+	     $this->iv = random_bytes(32);
+	   } else {
+	     $this->iv = mcrypt_create_iv(32, MCRYPT_RAND);
+	   }]]></add>
+</operation>
+</file>
+</modification>

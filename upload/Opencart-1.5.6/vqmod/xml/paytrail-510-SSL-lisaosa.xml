@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+<version><![CDATA[1.2]]></version>
+<author><![CDATA[peku]]></author>
+<name>Pakota linkit aina SSL muotoon library/Url.php tiedostossa (Paytrail 5.10</name>
+<code>34511098321hf</code>
+<file name="system/library/url.php">
+<operation>
+<search position="replace"><![CDATA[$connection = 'NONSSL']]></search>
+<add><![CDATA[$connection = 'SSL']]></add>
+</operation>
+</file>
+</modification>
