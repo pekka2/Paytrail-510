@@ -1,0 +1,29 @@
+<div id="payment">
+  <div style="width:100%;display:inline-block;border:solid 1px #e3e3e3;margin:5px;padding-left:2px;">
+   {% for provider in providers %}
+        <div class="col-sm-2 col-xs-12" style="height:125px;padding:1px;border:solid 1px #e3e3e3;margin:0px;margin-top:28px;display:block;">
+
+           <form style="display:inline" method="POST" action="{{ provider.url }}"">
+            {% for parameter in provider.parameters %}
+                <input type="hidden" name="{{ parameter.name }}" value="{{ parameter.value }}"/>
+            {% endfor %}
+            <button style="width:90%;height:120px;"><img style="width:94%;height:auto;" title="{{ provider.name }}" src="{{ provider.icon }}" alt="" /></button>
+           </form>
+
+         </div>
+{% endfor %}
+
+{% if error %}
+<pre>
+{{ error }}
+</pre>
+{% endif %}
+</div>
+
+<div class="buttons">
+  <div class="pull-left">
+        <a href="{{ back }}" data-toggle="tooltip" title="{{ button_back }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+  </div>
+</div>
+
+</div>
