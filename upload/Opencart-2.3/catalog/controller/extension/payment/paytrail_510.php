@@ -87,7 +87,7 @@ class ControllerExtensionPaymentPaytrail510 extends Controller {
                  $item[] = array(
                                       'unitPrice' => (int)round($order_info['total'] * 100,0),
                                       'units' => (int)1,
-                                      'vatPercentage' => (int)24,
+                                      'vatPercentage' => (int)25.5,
                                       'productCode' => '#'. $this->session->data['order_id'],
                                       'deliveryDate' => date('Y-m-d')
                  );
@@ -104,7 +104,7 @@ class ControllerExtensionPaymentPaytrail510 extends Controller {
             }
 
         if($products == $order_info['total'] && $shipping > 0){
-              $error = $this->language->get('error_order_totals');
+              $error = $this->language->get('error_order_totals')
         }
          
    
