@@ -1,7 +1,7 @@
 Maksutapa laajennus Opencart verkkokaupoihin.
 
 
-Toimivuus: Opencart versoissa:
+Toimivuus: Opencart versioissa:
 
 
 1.5.6.4
